@@ -159,11 +159,49 @@ local function startNPCGrab()
 end
 
 -- Smooth follow + attack loop
-local number = 0 -- initialize once at the top
+local prompt = workspace.NorthPole.Gift.GiftBox.ProximityPart.ProximityPrompt
+local giftPart = workspace.NorthPole.Gift.GiftBox.ProximityPart
+
 task.spawn(function()
     while true do
         task.wait(0.05)
         if enabled and root then
+
+
+
+            if prompt.Enabled then
+                -- ===== MOVE TOWARD THE GIFT PART INSTEAD OF PRINT("Hello") =====
+
+                local partPos = giftPart.Position
+                local myPos = root.Position
+
+                local stopDistance = 2
+
+                -- Move mostly horizontally
+                local targetPos = Vector3.new(partPos.X, myPos.Y, partPos.Z)
+                local direction = targetPos - myPos
+                local distance = direction.Magnitude
+
+                if distance > stopDistance then
+                    local stepSize = math.min(5, distance - stopDistance)
+                    local newPos = myPos:Lerp(targetPos, stepSize / distance)
+
+                    -- Smooth Y adjust
+                    local newY = myPos.Y + (partPos.Y - myPos.Y) * 0.5
+
+                    -- Move and face the part
+                    root.CFrame = CFrame.new(
+                        Vector3.new(newPos.X, newY, newPos.Z),
+                        partPos
+                    )
+				else
+            		prompt:InputHoldBegin()
+            		wait(0.01)
+            		prompt:InputHoldEnd()
+                end
+            -- ================================================================
+			end
+
             updateSelectedNPCs()
             startNPCGrab()
 
@@ -176,9 +214,13 @@ task.spawn(function()
 
 				game:GetService("ReplicatedStorage").Modules.Net["RE/GoldenFlameThrowerReload"]:FireServer(1)
 				game:GetService("ReplicatedStorage").Modules.Net["RE/flamethrowerReload"]:FireServer(1)
+
 				pcall(function()
 					game:GetService("ReplicatedStorage").Modules.Net["RF/AdventCalendar/ClaimReward"]:InvokeServer()
 				end)
+
+
+				--game:GetService("ReplicatedStorage").Modules.Net["RF/AdventCalendar/ClaimReward"]:InvokeServer()
 			end
         end
     end
