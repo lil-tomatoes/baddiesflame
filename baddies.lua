@@ -174,13 +174,11 @@ task.spawn(function()
 				game:GetService("ReplicatedStorage").Modules.Net["RE/flamethrowerFire"]:FireServer(1)
 				game:GetService("ReplicatedStorage").Modules.Net["RE/GoldenFlameThrowerFire"]:FireServer(1)
 
-				--number = number + 1
-				--if number >= 500 then
-				--    number = 0 -- reset
 				game:GetService("ReplicatedStorage").Modules.Net["RE/GoldenFlameThrowerReload"]:FireServer(1)
 				game:GetService("ReplicatedStorage").Modules.Net["RE/flamethrowerReload"]:FireServer(1)
-				game:GetService("ReplicatedStorage").Modules.Net["RF/AdventCalendar/ClaimReward"]:InvokeServer()
-				--end
+				pcall(function()
+					game:GetService("ReplicatedStorage").Modules.Net["RF/AdventCalendar/ClaimReward"]:InvokeServer()
+				end)
 			end
         end
     end
